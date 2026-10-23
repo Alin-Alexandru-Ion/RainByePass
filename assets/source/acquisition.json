@@ -1,0 +1,58 @@
+[
+  {
+    "id": "A01",
+    "creator": "WickedInsignia",
+    "page": "https://opengameart.org/content/clouds-with-transparency",
+    "name": "clouds.zip",
+    "evidence": "https://opengameart.org/content/clouds-with-transparency",
+    "retrieved": "2026-10-14T15:19:19.392Z",
+    "license": "CC0-1.0",
+    "imported": false,
+    "downloadUrl": "https://opengameart.org/sites/default/files/fx_cloudalphas.zip",
+    "sha256": "83514a391c765819bc159b7f9ab61ec9f06c0caa2b5865af20a5bd3b2a14cca4",
+    "bytes": 28480966,
+    "status": "downloaded_uninspected"
+  },
+  {
+    "id": "A02",
+    "creator": "Kenney",
+    "page": "https://kenney.nl/assets/foliage-sprites",
+    "name": "foliage.zip",
+    "evidence": "https://kenney.nl/support",
+    "retrieved": "2026-10-14T15:19:26.978Z",
+    "license": "CC0-1.0",
+    "imported": false,
+    "downloadUrl": "https://kenney.nl/media/pages/assets/foliage-sprites/b65bd70c69-1677495980/kenney_foliage-sprites.zip",
+    "sha256": "8e3e944acaa731a90e0b004846d2ce99ee8a65d5479b4c2f421cab7cdde128e5",
+    "bytes": 2432412,
+    "status": "downloaded_uninspected"
+  },
+  {
+    "id": "A06",
+    "creator": "Dimitrios Savva / Poly Haven",
+    "page": "https://polyhaven.com/a/wood_table",
+    "name": "wood_table_diffuse.jpg",
+    "evidence": "https://polyhaven.com/license",
+    "retrieved": "2026-10-14T15:19:27.137Z",
+    "license": "CC0-1.0",
+    "imported": false,
+    "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_table/wood_table_diff_1k.jpg",
+    "sha256": "f81642ae141958feac6c5acac03e2aeb6cfe049dff301d0627e3c17f2dc5c7a5",
+    "bytes": 987969,
+    "status": "downloaded_uninspected"
+  },
+  {
+    "id": "A11",
+    "creator": "Kenney Vleugels / Kenney",
+    "page": "https://kenney.nl/assets/foliage-pack",
+    "name": "foliage-pack.zip",
+    "evidence": "https://kenney.nl/assets/foliage-pack",
+    "retrieved": "2026-10-17T18:03:39.2072793Z",
+    "license": "CC0-1.0",
+    "imported": true,
+    "downloadUrl": "https://kenney.nl/media/pages/assets/foliage-pack/06a6c43298-1677693473/kenney_foliage-pack.zip",
+    "sha256": "33bd564f2cebb6a68bee9a798650d669571a389a437b0bd601d257ca2b5e7aed",
+    "bytes": 2230956,
+    "status": "selected_raw_files_visually_reviewed"
+  }
+]

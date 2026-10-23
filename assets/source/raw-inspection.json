@@ -1,0 +1,1354 @@
+[
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha01.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      102
+    ],
+    "sha256": "53bbdc9d10cd37f4386f339aa2f846f96d5e152ea34a618b0d04ae52b918dde0"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha02.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      70
+    ],
+    "sha256": "6e8352e41f0ceccdadaccf81663d045c2b8e875a4ab28146ecf88e0c2d9b85ab"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha03.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "602a55f5e25e606999bfa218572a9703f54469ed1fe7c857c77e5038cc4681ee"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha04.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      89
+    ],
+    "sha256": "72b2fdc48f271aea089fa391867f0fb72158db2cbb28828149fdd64d614da489"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha05.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      237
+    ],
+    "sha256": "5cae51b43d8d7dbb4b9d8e1f8830d4120ef1cd9f95690f4c5f58afb0c2b0f339"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha06.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "a1f05810c43d7811cb72f460595cc6e446e20fd4601342ba93d30045cb6095f1"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha07.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      84
+    ],
+    "sha256": "d831a99a3577a8fe1b798fc8b1c4ee71170234ae36dd7fa67a19a841393bed33"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha08.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      147
+    ],
+    "sha256": "aed58c4693d9855d0be286938062ca7ffc0a14960c67c037679b6db0e6d081a4"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha09.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      249
+    ],
+    "sha256": "367fcdc8ce490f55718eb26704d632536a721c92db75a7d7ca866fc31cc9142a"
+  },
+  {
+    "path": "assets/source/acquired/clouds/FX_CloudAlpha10.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "alphaExtrema": [
+      0,
+      243
+    ],
+    "sha256": "4a91c91701707d6c6a901b62e0fc3b69f7c3d9d86d560129358203330d2aa173"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0001.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "f68634c0a094efc987991705a1d971ab4e348a85a5b39dbca2d972425d0ea0c8"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0002.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "518ace9326c52dd86badb8d6f1b2118dfb20d68b21f8d7c8a570233dd63d0a2f"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0003.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "e0dba945e2e752d707b5da28037ae8c6c93b0efb17d6c52ced77a58f0f124333"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0004.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "952c2492a076dacdcd8ed6da68986e5da2ed3802673029a22ea8b23796ebf87f"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0005.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "bc2faa31e5b289e087a6602b4a01e0d92d4a7e00a4e63acac5f8a5d8f5563c0e"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0006.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "75735e285974b6a2641370eb1c753648ac54d30fb40a7120c26d577ee0d72d02"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0007.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "dfb7632e5185f411c589caabf6e07465e2207ae80efc53740a02747651678e83"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0008.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "1206ae536cdbf7fa65c27bb09d1bf6cf2aa0764982189c11adbc20b4769ca099"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0009.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "298569da97154d1ca3be1ef0c4ca0d6a122ec342a1a87f4d262ff5fea82dd193"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0010.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "4dc9d02b20ef0ada78444aa5fe7ae400b82c5a8598c0e1beb596d6782a10a17f"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0011.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "6689c145e5ed909977cc9fec1d7d1fc205aaa571e6df71df3c26ce88cd2992f1"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0012.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "b955c3eb3a066b591ee375ee0ae1229f8c00a92881e1651ccf95a86cb858ab01"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0013.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "32bd36f30aea6892347f5391e97563a7bc5f13661ee8a6a21863da2083bf936c"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0014.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "84925fc2660440377553b21b13e002fc36dd7b49c3816c08450fc55cf056f9fd"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0015.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "2f129ee7bb2e2cd56b1eb460d2196b1fa4677e935beb8c68f48fdbe680316def"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0016.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "bbc3ce51cef534fb37d6de200d459ee62fe8e919ceed1602dccd1372e7038ed6"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0017.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "f4557e4d46d2d69ad01b8f35f2136bd19eef35c3ea85a49463c5a744f3267c71"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0018.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "cc87af160ac15f4a284975f6390667a1a337c19042d3ef4ab0edd60c0ba50749"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0019.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "cd238e4c31eef1ea4e837a49df077b5c948ddb44674e8455a12862b483da376d"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0020.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "2b0014a5a2c3968be639573b970cff18cab33ada18d9be39cfbea8518d5d5083"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0021.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "404ceab82c2bc11033fb3fb3d6617d36b13de1c4e726704a7111dff6861d1fdf"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0022.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "39f330259e60c9f0a23a02538d3ee8965841aea21f1a78b518147b8f35ed902c"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0023.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "e70a4da3f445ec461dc30c2e947cea18d6c11b7eee0a290296a8cae25cafc568"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0024.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "8d5d2268605888119c585b5b79c9b1b4716df23e052c7ba0c57a5f851bd02fe4"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0025.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "b1e1f8044d58a98aca90974953053223e25d4641955d6d9143ea3a18bee32753"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0026.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "1e3bec1441557742928981a6bbfcf219771110f5d466cc07ff00dab6c224f811"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0027.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "cb8575041e0a02019128901e840f96327f7e38e493c59b9631f42ba99e0bb0be"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0028.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "eb65f45dc1b120ecef0abde3f4f5b0a91b7b783967341fb432d11396dd4f886f"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0029.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "add4d2c68f73049133b8f30f4d00f1b8b5e30b9a825847da946e93d98ee10314"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0030.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "e33e99bf40e22d2e42604e7aa4c00e337991551be5ccdc9a26254b8472a73e63"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0031.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "eaafc8422ceb4980da43daa844cef092ebf3e62b6d8af21f7d79156c9ceb77cd"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0032.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "a58199430681a797dab8d2d4d56930abeea35598d528161f61469d09db60d332"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0033.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "eac86c09d3005ec4d8d51abb0a039dadd1e5675c40371cbabd0306a5d76d12ae"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0034.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "2121567af084ff0bd6716b9ccd14eaa78f05b8221c886d427f8d4f7c2c10b6a4"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0035.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "c142bbe1597e89eb5eac6ee25135115eab3455ef8b4b1bd2624d8f3f54c39e73"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0036.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "08fa3db12ad60e1a8bdfaa56729e49c68c892b085db04574c29b82bb2ee837aa"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0037.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "f20bd27d85671ab3cd02bb9dd57afa88077cdd2d2ea365720b8e96202c4fb9de"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0038.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "9af485e5cc2b6934326fad7b1760593842fc44c4f139ff64ecc9fde7d38e5e46"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0039.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "907bb1c63d1e9d90567eacc11c7d5f98fd26ed359e7989f3b8d6f6adcde0b7c1"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0040.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "6b11e247406c6eebc23b17536cd412c6bb75a894dbe99273c18d906736c6d925"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0041.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "917cacef4d292181b4f499f6de16fed8f195f599021a8497db99df1383f23fe2"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0042.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "8e701f5e6582de9e453b5b50a143bf8677721540eb37469820993583aa411264"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0043.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "0fdfe381a0627f4917b7f2a3163c90c4f6f767e3bf37d64cfd4191daabc9c817"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0044.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "5f313d17b80d26bf0c120d8b17de0bf9908ffd409e796aef5e18525bed98b8f6"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0045.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "a847cea3d352a7d373c36f0ce0f9e8e7d597497a95b0300308f8992e8990e13f"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0046.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "87ac23432375c2c9a8955b6a23e80d9ceb7143b446799f3667562ac160d67490"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0047.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "125ed4712ef95f56ce22f0073e52032687b38d02cbead1586aa53bea5909dca1"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0048.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "3302bf3497f4c78a5bdf1ea43790e58ea3ef868c59a98876ebd3e88d8e00fd67"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0049.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "8945f13adb8ae1452cf4636b8c7620398b003a321ba793f525a12b1375e1d699"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Flat/sprite_0050.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "a2495bdde621c1e35a4a707513edd8de8b48bfa3a086a4da106e4c2cad452491"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0052.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "0b6d85d1700c54ad5bcbb49785105358a05a77eddc2f836dd72144eeabfccc87"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0053.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "3e7bdeae8533e6747dc2168992ce499df4e5dd6c06bfeaa2bc47df6cdde9f79b"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0054.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "50067bdd72464cf836c2ff001cac2f7cd9ef1f3e00031a33b635504752367acc"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0055.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "fb8ef03465d66688501a4b4dd349af79f78b3b68f6e9c51d5860906f18d9bf38"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0056.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "1bce4d5170bb8fa5cbd0f7a4ae9f4aa4df9cee2f4d74a96ba5e092451601640d"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0057.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "c0603bfc4890cdabfb2dc8f387b25ffea7ab18711b4ca62033abf456d372775b"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0058.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "8bb35df7a9327aa878e4df39f9e2edddb252d67787142ec6cda764f582d8dc70"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0059.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "f1b5da67e2483f73dae0cfbff89ad04db69d9c94de3f3aac1a3aaa87d7b6cff2"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0060.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "14f44af890bd604b93fef13274cb43206a832d2c9b0ea1836e89b5cdbb83404d"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0061.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "d35933b9bf270efb5dba77f5c5c8199f833e6536dd2275935d3322b9b153b23f"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0062.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "6197ea203119a0c02e3a09af6c871a92329ddba418b32e4c506c5361a047b4e3"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0063.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "6bfb319c9f3332b32b7fb2e4a50bc8350abbfa72fefe8a3c5575c40dd6058eef"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0064.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "c2359b5644c98941d2d8ac1ea117c7742695e1aa62634fb6cc7e8dd394ec3c20"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0065.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "dea699db6640a4fd5f220b6b8eac3d90818f6c7a596cc5ad392a83823eac19f2"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0066.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "7c3fafb5d3e6b16e6ab7e772f2e77a4dba26d01bb02c1890f8ca04508362c5e8"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0067.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "3656ca44be905cae4d99a0a431336e2c146402013c9e6320339ffa6c62c97488"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0068.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "a0d581234bd44ece149d3a2123e5e4e7094fc0443f1c3792a51afa0f935d6572"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0069.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "4034e5bba3e2227b3d7028809ba1c7e3a43cedcd732c4ba545f97fb52820a4ab"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0070.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "88fdb98283f61cbf25c38ed5de1aa8942826c75027288727aa5d52347eb3939b"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0071.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "49d0c58efafed0437a5a8cf47c5d2a7947d8d6b8df82d512547e49bc18b0b990"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0072.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "8b3caefb65d3fd23b14d583d41a566e05c3ce99d000e4764ffc8d1c268956564"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0073.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "1dbea13a2e64857651aa3185eac35779715ea1ab2000ecab4e2e389a9de0db2e"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0074.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "72804f8e2695a73951e9cc48c1f37f4f35480a8a1e28101099a165ee4fae948e"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0075.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "738f0c14ceb62760ac900db45529e1867f9e0899eedceade9e5c886df2c51302"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0076.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "6cd0663779d6feb097698c71559528fa2c90dbbd82aaeeb7510ffd12aa3521c5"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0077.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "0fce9c50fc16974fc4e8803bc133fc90a009e1dc668589f04ac60ab532d7183a"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0078.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "50db971034d101b967339a1af7eb2dce5fd52160b1c402709f2c829f60a41afa"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0079.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "5603a99193a9bad7493be0ceaa8e2cf72f765bfafbd6e3b7adab3cf64b3c5c5a"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0080.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "d75a932ac12fc93c89ed50cd8b187cceaae63e695071ad810731979558d53a8e"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0081.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "4797a1d6f306f4fbabe8a9badce3c3bd6021e8ce94aea4b6fa5f833f733d97ef"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0082.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "d3080bb73bab5bf552325df76bae847a7c18b33663ce255f7f81acfef29e7125"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0083.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "2ca801859a15daa7727b4f9a714d3ef92e5927e633e78a514c59153101bf6bdd"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0084.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "d9e2fc0f3eee22e52b12732b833eb1c11de79bec2970d90eadc104ff7e75a7c4"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0085.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "e99cbbda8398d89337e07a5b90b64a68bd37788034a691ed27babf3d8de63557"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0086.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "0bac81db887685017f73624ea33d5008c6068b7b20098798efbd8c824dbb4784"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0087.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "55c55e41afa13d8168d68339a20f18236ae8d68e18de9ee663072912b76e1828"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0088.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "957a50b123550b9c3a2c971e0c6f5811d3a1893e31c273a799032e7ce078c1ed"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0089.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "c75ab8c6e224f1e33cbcddfb427412d9ab7334493f8985c2f5b8c7230d0153eb"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0090.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "54385d774d37346ff9b9f86c8bd2a5c59612b35efca81273a5366b04476da5b5"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0091.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "e48160b3a1531796812e3b416e7fc9a7bac36ed7ab4be2b52c33e7f753a939e0"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0092.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "a3113a725ce105d0f71bfec20c363c3707c1f26dc6f1d3f14a74b372b81ceccf"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0093.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "1cda8a1d8eabcc6badaf7439f296ef08b58296eb1c663668f7030da1aadec8d5"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0094.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "f7c5ac247d60c28a2461f2016fb64f08d1aaa54ffe0ebdc3f6da27041794f22c"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0095.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "fd48987c9543985845a0e579dd598067a5e5f97198d06047cc7a737eca93a616"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0096.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "16ef1daae40c27839664515358858733fe0407dc05a9e884bb42523f4c073f17"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0097.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "f279b2c8b8c4e847defa94c78293b4a86fc7e96691c0c74ba0bc4c75abc0af1a"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0098.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "d63362147c56ff39ad25cf5d7b9b89e2f3b0bb118622650b20081f0a0da0c4db"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0099.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "b5544328f7dcb6ac4c0b22899c16ecbc2dfdd258635a80bb10a348d543ae2f13"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0100.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "55b0be69b5d69b4e9457f66d79319c4d2fe8ba85c89b6f27ee2e1cb97abf15d1"
+  },
+  {
+    "path": "assets/source/acquired/foliage/PNG/Shaded/sprite_0101.png",
+    "size": [
+      1024,
+      1024
+    ],
+    "alphaExtrema": [
+      0,
+      255
+    ],
+    "sha256": "629330932517102b1ebf67c798deae9604c4a5dcb05b5d08970c976eec170fef"
+  },
+  {
+    "path": "assets/source/acquired/foliage/Preview.png",
+    "size": [
+      918,
+      515
+    ],
+    "alphaExtrema": [
+      255,
+      255
+    ],
+    "sha256": "9a6394899439505f0f3095502199ae5ab143214dc793ba6390900e2a3d233b13"
+  },
+  {
+    "path": "assets/source/acquired/foliage/Sample.png",
+    "size": [
+      918,
+      515
+    ],
+    "alphaExtrema": [
+      255,
+      255
+    ],
+    "sha256": "d91d1cd25e628bd09ed779ad5f4d8730ed55958a3c7081bbeccf3f2954528a4e"
+  },
+  {
+    "path": "assets/source/acquired/wood_table_diffuse.jpg",
+    "size": [
+      1024,
+      1024
+    ],
+    "sha256": "f81642ae141958feac6c5acac03e2aeb6cfe049dff301d0627e3c17f2dc5c7a5"
+  }
+]

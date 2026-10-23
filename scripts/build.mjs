@@ -1,0 +1,11 @@
+import { build } from 'esbuild';
+import { mkdir, copyFile, cp } from 'node:fs/promises';
+await mkdir('dist', { recursive: true });
+await build({ entryPoints: ['src/main/main.ts'], outfile: 'dist/main.cjs', bundle: true, platform: 'node', format: 'cjs', external: ['electron'], sourcemap: true });
+await build({ entryPoints: ['src/main/preload.ts'], outfile: 'dist/preload.cjs', bundle: true, platform: 'node', format: 'cjs', external: ['electron'] });
+await build({ entryPoints: ['src/renderer/app.ts'], outfile: 'dist/app.js', bundle: true, platform: 'browser', format: 'iife', sourcemap: true });
+await copyFile('src/renderer/index.html', 'dist/index.html');
+await copyFile('src/renderer/style.css', 'dist/style.css');
+await cp('assets/runtime', 'dist/assets', { recursive: true });
+await copyFile('assets/asset-manifest.json', 'dist/asset-manifest.json');
+console.log('Built offline main, sandboxed preload, renderer and local assets.');
