@@ -4,7 +4,7 @@ export type Mood = 'morning' | 'day' | 'evening' | 'night';
 export const outlookStyles = ['city', 'field', 'meadow', 'mountains', 'american-mountains', 'arabian-desert', 'irish-lake', 'japanese-ocean', 'latin-badlands'] as const;
 export type OutlookStyle = typeof outlookStyles[number];
 export interface Settings {
-  schemaVersion: 3;
+  schemaVersion: 4;
   solar: { automatic: boolean; manualMood: Mood; timeZone: string; latitude: number; longitude: number; label: string; reference: string; needsLocationSetup: boolean };
   layers: Record<Layer, boolean>;
   clouds: { movementEnabled: boolean; useForecastWind: boolean; manualSpeedMultiplier: number; coverage: number; maximumMotionMultiplier: number; seed: number };
@@ -16,11 +16,11 @@ export interface Settings {
   ui: { viewerMode: 'borderless' | 'fullscreen'; displayId: number | null };
 }
 export const defaults: Settings = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   solar: { automatic: true, manualMood: 'day', timeZone: 'Europe/Berlin', latitude: 53.55, longitude: 10, label: 'Hamburg area (approximate)', reference: 'Bundled Hamburg regional preset; confirm or override coordinates.', needsLocationSetup: true },
   layers: Object.fromEntries(layerNames.map(x => [x, x !== 'lightRays'])) as Record<Layer, boolean>,
-  clouds: { movementEnabled: true, useForecastWind: false, manualSpeedMultiplier: 1, coverage: .3, maximumMotionMultiplier: 2, seed: 1401 },
-  tree: { swayEnabled: true, useForecastWind: false, manualFrequencyMultiplier: 1, manualAmplitudeMultiplier: 1, maximumMotionMultiplier: 2, anchor: 'upper-right', seed: 1402 },
+  clouds: { movementEnabled: true, useForecastWind: false, manualSpeedMultiplier: 3, coverage: .3, maximumMotionMultiplier: 6, seed: 1401 },
+  tree: { swayEnabled: true, useForecastWind: false, manualFrequencyMultiplier: 3, manualAmplitudeMultiplier: 1, maximumMotionMultiplier: 6, anchor: 'upper-right', seed: 1402 },
   water: { movementEnabled: true, manualSpeedMultiplier: 1 },
   appearance: { frameStyle: 'warm-wood', crossbars: 'classic', outlookStyle: 'meadow', horizonFraction: .68, brightness: 1, sunGlowIntensity: .5, rayIntensity: .15, starTwinkleEnabled: false, starTwinkleSpeedMultiplier: 1 },
   weather: { networkOptIn: false, projectContactUrl: '', preferredRefreshDays: 7 },
@@ -52,13 +52,23 @@ export function validateSettings(input: unknown): Settings {
   result.solar.manualMood = pick(result.solar.manualMood, ['morning', 'day', 'evening', 'night'], 'day');
   if (!validZone(result.solar.timeZone)) result.solar.timeZone = defaults.solar.timeZone;
   const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+  // Stored v3 defaults were slower than the new midpoint. Keep deliberately
+  // chosen non-default speeds; zero becomes the corresponding off switch.
+  if (typeof raw.schemaVersion === 'number' && raw.schemaVersion < 4) {
+    if (result.clouds.manualSpeedMultiplier === 1) result.clouds.manualSpeedMultiplier = 3;
+    if (result.tree.manualFrequencyMultiplier === 1) result.tree.manualFrequencyMultiplier = 3;
+    if (result.clouds.maximumMotionMultiplier === 2) result.clouds.maximumMotionMultiplier = 6;
+    if (result.tree.maximumMotionMultiplier === 2) result.tree.maximumMotionMultiplier = 6;
+  }
+  if (result.clouds.manualSpeedMultiplier === 0) result.clouds.movementEnabled = false;
+  if (result.tree.manualFrequencyMultiplier === 0) result.tree.swayEnabled = false;
   result.solar.latitude = clamp(result.solar.latitude, -90, 90); result.solar.longitude = clamp(result.solar.longitude, -180, 180);
-  result.clouds.manualSpeedMultiplier = clamp(result.clouds.manualSpeedMultiplier, 0, 3);
+  result.clouds.manualSpeedMultiplier = clamp(result.clouds.manualSpeedMultiplier, 1.5, 6);
   result.clouds.coverage = clamp(result.clouds.coverage, 0, .7);
-  result.clouds.maximumMotionMultiplier = clamp(result.clouds.maximumMotionMultiplier, .1, 3);
-  result.tree.manualFrequencyMultiplier = clamp(result.tree.manualFrequencyMultiplier, 0, 3);
+  result.clouds.maximumMotionMultiplier = clamp(result.clouds.maximumMotionMultiplier, .1, 6);
+  result.tree.manualFrequencyMultiplier = clamp(result.tree.manualFrequencyMultiplier, 1.5, 6);
   result.tree.manualAmplitudeMultiplier = clamp(result.tree.manualAmplitudeMultiplier, 0, 3);
-  result.tree.maximumMotionMultiplier = clamp(result.tree.maximumMotionMultiplier, .1, 3);
+  result.tree.maximumMotionMultiplier = clamp(result.tree.maximumMotionMultiplier, .1, 6);
   result.water.manualSpeedMultiplier = clamp(result.water.manualSpeedMultiplier, 0, 3);
   result.tree.anchor = pick(result.tree.anchor, ['upper-right', 'upper-left'], 'upper-right');
   for (const g of [result.clouds, result.tree]) g.seed = Math.abs(Math.trunc(g.seed)) % 2147483647;

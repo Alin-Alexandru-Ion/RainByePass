@@ -6,9 +6,9 @@ export function motionTargets(s: Settings, wind: number | null): Motion {
   const valid = wind !== null && Number.isFinite(wind) && wind >= 0;
   const c = s.clouds, t = s.tree;
   const useC = c.useForecastWind && valid, useT = t.useForecastWind && valid;
-  return { cloudSpeed: c.manualSpeedMultiplier === 0 ? 0 : useC ? clamp(.35 + wind! / 8, 0, c.maximumMotionMultiplier) : Math.min(c.manualSpeedMultiplier, c.maximumMotionMultiplier),
-    frequency: t.manualFrequencyMultiplier === 0 ? 0 : useT ? clamp(.5 + wind! / 15, 0, t.maximumMotionMultiplier) : Math.min(t.manualFrequencyMultiplier, t.maximumMotionMultiplier),
-    amplitude: t.manualAmplitudeMultiplier === 0 ? 0 : useT ? clamp(.4 + wind! / 10, 0, t.maximumMotionMultiplier) : Math.min(t.manualAmplitudeMultiplier, t.maximumMotionMultiplier),
+  return { cloudSpeed: c.manualSpeedMultiplier === 0 ? 0 : useC ? clamp((.35 + wind! / 8) * 3, 0, c.maximumMotionMultiplier) : c.manualSpeedMultiplier,
+    frequency: t.manualFrequencyMultiplier === 0 ? 0 : useT ? clamp((.5 + wind! / 15) * 3, 0, t.maximumMotionMultiplier) : t.manualFrequencyMultiplier,
+    amplitude: t.manualAmplitudeMultiplier === 0 ? 0 : useT ? clamp(.4 + wind! / 10, 0, t.maximumMotionMultiplier) : t.manualAmplitudeMultiplier,
     cloudSource: useC ? 'Cached forecast' : 'Manual', treeSource: useT ? 'Cached forecast' : 'Manual' };
 }
 export class MotionClock {
@@ -19,8 +19,11 @@ export class MotionClock {
     const cloudActive = s.layers.clouds && s.clouds.coverage > 0 && s.clouds.movementEnabled && target.cloudSpeed > 0;
     const treeActive = s.layers.tree && s.tree.swayEnabled && target.frequency > 0 && target.amplitude > 0;
     // Freeze smoothed pose parameters too: forecast changes while stopped must not cause a pose jump on thaw.
-    if (cloudActive) this.effective.cloudSpeed = Math.min(s.clouds.maximumMotionMultiplier, mix(this.effective.cloudSpeed, target.cloudSpeed, a));
-    if (treeActive) { this.effective.frequency = Math.min(s.tree.maximumMotionMultiplier, mix(this.effective.frequency, target.frequency, a)); this.effective.amplitude = Math.min(s.tree.maximumMotionMultiplier, mix(this.effective.amplitude, target.amplitude, a)); }
+    if (cloudActive) this.effective.cloudSpeed = target.cloudSource === 'Cached forecast' ? Math.min(s.clouds.maximumMotionMultiplier, mix(this.effective.cloudSpeed, target.cloudSpeed, a)) : mix(this.effective.cloudSpeed, target.cloudSpeed, a);
+    if (treeActive) {
+      this.effective.frequency = target.treeSource === 'Cached forecast' ? Math.min(s.tree.maximumMotionMultiplier, mix(this.effective.frequency, target.frequency, a)) : mix(this.effective.frequency, target.frequency, a);
+      this.effective.amplitude = target.treeSource === 'Cached forecast' ? Math.min(s.tree.maximumMotionMultiplier, mix(this.effective.amplitude, target.amplitude, a)) : mix(this.effective.amplitude, target.amplitude, a);
+    }
     this.effective.cloudSource = target.cloudSource; this.effective.treeSource = target.treeSource;
     if (cloudActive) { this.cloud += dt; this.cloudDistance += dt * this.effective.cloudSpeed; }
     if (treeActive) this.tree += dt * this.effective.frequency;
