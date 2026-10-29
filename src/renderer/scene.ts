@@ -27,10 +27,12 @@ export class Scene {
   private timer: ReturnType<typeof setTimeout> | null = null; private resourceGeneration = 0;
   private targetState: SolarState;
   constructor(public canvas: HTMLCanvasElement, public settings: Settings) {
-    this.context = ctx(canvas, { alpha: false, desynchronized: true }); this.state = this.solar.state(new Date(), settings); this.targetState = this.state;
+    // Present the completed scene at the display's refresh boundary. A
+    // desynchronized canvas can expose a partially painted HD frame.
+    this.context = ctx(canvas, { alpha: false }); this.state = this.solar.state(new Date(), settings); this.targetState = this.state;
     this.rng = random(settings.clouds.seed); this.bag = new SelectionBag(24, this.rng, 18); this.reseed();
     canvas.addEventListener('contextlost', event => { event.preventDefault(); this.suspended = true; this.errors.push('Graphics context lost; awaiting restoration.'); document.dispatchEvent(new CustomEvent('scene-error', { detail: 'Graphics context lost; waiting for restoration. Restart if it does not recover.' })); });
-    canvas.addEventListener('contextrestored', () => { this.context = ctx(canvas, { alpha: false, desynchronized: true }); this.terrainKey = ''; this.last = 0; this.suspended = false; this.requestFrame(); document.dispatchEvent(new Event('scene-recovered')); });
+    canvas.addEventListener('contextrestored', () => { this.context = ctx(canvas, { alpha: false }); this.terrainKey = ''; this.last = 0; this.suspended = false; this.requestFrame(); document.dispatchEvent(new Event('scene-recovered')); });
     document.addEventListener('visibilitychange', () => { this.last = 0; this.lastDraw = 0; this.cancelFrame(); if (!document.hidden) this.requestFrame(); });
   }
   async load() {
@@ -83,7 +85,7 @@ export class Scene {
       const bw = enabled ? this.canvas.width : 1, bh = enabled ? this.canvas.height : 1;
       if (c.width !== bw || c.height !== bh) { c.width = bw; c.height = bh; this.terrainKey = ''; this.treeRenderKey = ''; this.cloudRenderKey = ''; this.frameKey = ''; }
     }
-    if (!l.lightRays || !l.tree || !l.sun) for (const c of [this.rayLayer,this.mask]) { c.width=1; c.height=1; }
+    if (!l.lightRays || !l.tree || !l.sun) for (const c of [this.rayLayer,this.mask]) { if(c.width!==1)c.width=1; if(c.height!==1)c.height=1; }
   }
   update(s: Settings) { this.settings = s; this.reseed(); this.lastSolar = 0; this.lastRay=0; if (this.running) { this.resize(); this.requestFrame(true); } }
   start() { this.running = true; this.last = 0; this.lastDraw = 0; this.nextDraw = 0; this.lastSolar=0; this.state=this.solar.state(this.nowOverride??new Date(),this.settings); this.targetState=this.state; this.resize(); this.requestFrame(true); }

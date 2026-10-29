@@ -50,6 +50,19 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
   const sizes=[[1280,720],[2560,1440],[3840,2160],[2560,1080],[720,1280],[520,420]],captures:any[]=[];
   win.setResizable(true);
   for(const [w,h]of sizes){win.setSize(w,h);await pause(200);captures.push(await js('window.rainTest.snapshot()'));await screenshot(`scene-${w}x${h}`);}
+  win.setSize(2560,1440);await js("window.rainTest.outlook('meadow')");await js('window.rainTest.performanceStart(15,false,\'high\')');await pause(800);
+  const hdContext=await js("document.getElementById('scene').getContext('2d').getContextAttributes()");
+  const hdPerformance=await profile('HD 2560x1440 at 15 fps');
+  const hdSkySamples:number[][]=[];
+  for(let i=0;i<10;i++){
+    await pause(125);const image=await win.webContents.capturePage(),size=image.getSize(),pixels=image.toBitmap();
+    const offset=(Math.floor(size.height*.2)*size.width+Math.floor(size.width*.33))*4;
+    hdSkySamples.push([...pixels.subarray(offset,offset+3)]);
+  }
+  const hdSkyMaxStep=hdSkySamples.slice(1).reduce((largest,sample,i)=>Math.max(largest,...sample.map((channel,j)=>Math.abs(channel-hdSkySamples[i][j]))),0);
+  const hdPresentation={context:hdContext,performance:hdPerformance,skySamples:hdSkySamples,maxChannelStep:hdSkyMaxStep};
+  await screenshot('scene-hd-2560x1440');
+  await js('window.rainTest.performanceStart(15,false,\'low\')');
   win.setSize(520,420);await js('window.rainTest.showSettings()');await pause(200);
   for(let i=0;i<30;i++){
     if(await js('document.activeElement.dataset.setting')==='clouds.movementEnabled')break;
@@ -74,8 +87,8 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
   win.webContents.sendInputEvent({type:'keyDown',keyCode:'Escape'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Escape'});await pause(600);
   const stopped={nativeFullscreen:win.isFullScreen(),bounds:win.getBounds(),snapshot:await js('window.rainTest.snapshot()')};await screenshot('stopped-settings');performance.push(await profile('settings after Stop'));
   const checks={keyboardSettings,keyboardBefore,keyboardAfter,pointerTests,f11,escapeReturnedToSettings:!stopped.snapshot.viewing&&!stopped.nativeFullscreen,minimizedFrames:minimizedAfter.frames-minimizedBefore.frames,wasUnfocused,unfocusedFrames:unfocusedAfter.frames-unfocusedBefore.frames};
-  const output={platform:process.platform,arch:process.arch,versions:process.versions,os:{release:os.release(),cpu:os.cpus()[0]?.model,logicalCpus:os.cpus().length},gpu:await app.getGPUInfo('basic'),displays:screen.getAllDisplays(),startup,stopped,result,checks,landscapes,landscapePerformance,monitorTests,captures,trajectory,performance,errors};
+  const output={platform:process.platform,arch:process.arch,versions:process.versions,os:{release:os.release(),cpu:os.cpus()[0]?.model,logicalCpus:os.cpus().length},gpu:await app.getGPUInfo('basic'),displays:screen.getAllDisplays(),startup,stopped,result,checks,landscapes,landscapePerformance,hdPresentation,monitorTests,captures,trajectory,performance,errors};
   await writeFile(path.join(directory,'smoke-results.json'),JSON.stringify(output,null,2));
-  const failed=result.failed.length||errors.length||landscapes.length!==12||landscapes.some(x=>x.errors.length||x.renderedStyle!==x.style)||!Object.values(pointerTests).every(Boolean)||!keyboardSettings||!f11||!checks.escapeReturnedToSettings||checks.minimizedFrames!==0||!wasUnfocused||checks.unfocusedFrames===0;
+  const failed=result.failed.length||errors.length||landscapes.length!==12||landscapes.some(x=>x.errors.length||x.renderedStyle!==x.style)||hdContext.desynchronized||hdSkyMaxStep>40||!Object.values(pointerTests).every(Boolean)||!keyboardSettings||!f11||!checks.escapeReturnedToSettings||checks.minimizedFrames!==0||!wasUnfocused||checks.unfocusedFrames===0;
   console.log('Viewer/resource evidence:',directory,'checks:',result.passed.length,'failures:',result.failed.length,'additional:',JSON.stringify(checks));app.exit(failed?1:0);
 }
