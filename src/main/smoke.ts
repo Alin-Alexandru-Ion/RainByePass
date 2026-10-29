@@ -27,6 +27,8 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
       landscapes.push({style,mood,renderedStyle:scene.terrainStyle,frames:scene.frames,errors:scene.errors});
     }
   }
+  await js("window.rainTest.mood('day')");await js("window.rainTest.outlook('arabian-desert')");
+  await pause(3000);await screenshot('dust-segment-a');await pause(250);await screenshot('dust-segment-b');
   const landscapePerformance:any[]=[];
   await js("window.rainTest.mood('day')");
   for(const style of ['city','american-mountains','arabian-desert','irish-lake','japanese-ocean','latin-badlands']){

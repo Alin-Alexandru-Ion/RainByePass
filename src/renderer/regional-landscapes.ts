@@ -1,5 +1,6 @@
 import { colorMix, cssColor, type RGB } from '../core/solar';
 import { random } from '../core/motion';
+import { DUST_CYCLE_SECONDS, dustWindow } from '../core/dust';
 import type { OutlookStyle } from '../core/settings';
 
 export const regionalOutlooks = ['american-mountains', 'arabian-desert', 'irish-lake', 'japanese-ocean', 'latin-badlands'] as const;
@@ -160,25 +161,50 @@ export function drawRegionalWater(g: CanvasRenderingContext2D, style: RegionalOu
   g.restore();
 }
 
-/** Sparse, drifting sand curls over cached dry terrain; no extra canvas. */
+type CurlPoint = { x: number; y: number; at: number };
+const curlPath: CurlPoint[] = (() => {
+  const curves: [[number,number],[number,number],[number,number],[number,number]][] = [
+    [[-2.6,.25],[-1.17,-.32],[-.55,-.65],[.12,-.5]],
+    [[.12,-.5],[.95,-.25],[.75,.47],[.12,.35]],
+    [[.12,.35],[-.2,.21],[-.1,-.14],[.16,-.1]]
+  ];
+  const points: [number,number][] = [];
+  for(const curve of curves) for(let i=0;i<=16;i++){
+    if(points.length&&i===0)continue;
+    const t=i/16,q=1-t;
+    points.push([q*q*q*curve[0][0]+3*q*q*t*curve[1][0]+3*q*t*t*curve[2][0]+t*t*t*curve[3][0],
+      q*q*q*curve[0][1]+3*q*q*t*curve[1][1]+3*q*t*t*curve[2][1]+t*t*t*curve[3][1]]);
+  }
+  let length=0;const measured=points.map(([x,y],i)=>{if(i)length+=Math.hypot(x-points[i-1][0],y-points[i-1][1]);return {x,y,at:length};});
+  return measured.map(p=>({...p,at:p.at/length}));
+})();
+
+function strokeCurlSegment(g: CanvasRenderingContext2D,x: number,y: number,sx: number,sy: number,start: number,end: number): void {
+  g.beginPath();let begun=false;
+  for(let i=1;i<curlPath.length;i++){
+    const a=curlPath[i-1],b=curlPath[i];if(b.at<start)continue;
+    const point=(at:number)=>{const t=(at-a.at)/(b.at-a.at);return [x+(a.x+(b.x-a.x)*t)*sx,y+(a.y+(b.y-a.y)*t)*sy] as const;};
+    if(!begun){const [px,py]=point(start);g.moveTo(px,py);begun=true;}
+    if(b.at>=end){const [px,py]=point(end);g.lineTo(px,py);break;}
+    g.lineTo(x+b.x*sx,y+b.y*sy);
+  }
+  if(begun)g.stroke();
+}
+
+/** A short sand segment travels along each cached curl path; no extra canvas. */
 export function drawRegionalDust(g: CanvasRenderingContext2D, style: RegionalOutlook, width: number, height: number, horizon: number, daylight: number, phase: number): void {
   if (style !== 'arabian-desert' && style !== 'latin-badlands') return;
   const w=width,h=height,u=Math.min(w,h),ground=h-horizon,desert=style==='arabian-desert',rng=random(desert?27183:39147);
-  const color=cssColor(colorMix([134,142,145],desert?[246,218,170]:[238,190,155],daylight));
-  const span=w+u*.24,count=Math.min(24,Math.ceil(w/u*9));
+  const color=cssColor(colorMix([134,142,145],desert?[255,239,195]:[255,210,174],daylight));
+  const span=w+u*.24,count=Math.min(24,Math.ceil(w/u*10));
   g.save();g.beginPath();g.rect(0,horizon-u*.11,w,Math.max(0,ground+u*.09));g.clip();
   g.strokeStyle=color;g.lineCap='round';
   for(let i=0;i<count;i++){
-    const x=(rng()*span+phase*u*.009*(.65+rng()*.7))%span-u*.12;
-    const y=horizon+ground*(-.07+rng()*.83)+u*.004*Math.sin(phase*.7+i*1.7);
-    const curl=u*(.009+rng()*.013),tail=curl*(1.8+rng()*1.5);
-    g.globalAlpha=(desert?.24:.28)+rng()*.16;g.lineWidth=Math.max(.8,u*(.00075+rng()*.00055));
-    g.beginPath();g.moveTo(x-tail,y+curl*.25);
-    g.bezierCurveTo(x-tail*.45,y-curl*.32,x-curl*.55,y-curl*.65,x+curl*.12,y-curl*.5);
-    g.bezierCurveTo(x+curl*.95,y-curl*.25,x+curl*.75,y+curl*.47,x+curl*.12,y+curl*.35);
-    g.bezierCurveTo(x-curl*.2,y+curl*.21,x-curl*.1,y-curl*.14,x+curl*.16,y-curl*.1);g.stroke();
-    g.globalAlpha*=.62;g.beginPath();g.moveTo(x-tail*1.3,y+curl*.72);
-    g.quadraticCurveTo(x-tail*.65,y+curl*.4,x-curl*.3,y+curl*.66);g.stroke();
+    const x=rng()*span-u*.12,y=horizon+ground*(-.07+rng()*.83);
+    const curl=u*(.018+rng()*.02),widthScale=.8+rng()*.5,opacity=(desert?.46:.48)+rng()*.18,lineWidth=Math.max(1,u*(.0011+rng()*.0007));
+    const window=dustWindow(phase,rng()*DUST_CYCLE_SECONDS);if(!window)continue;
+    g.globalAlpha=opacity;g.lineWidth=lineWidth;
+    strokeCurlSegment(g,x,y,curl*widthScale,curl,window[0],window[1]);
   }
   g.restore();
 }

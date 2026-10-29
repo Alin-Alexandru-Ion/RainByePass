@@ -1,6 +1,6 @@
 {
   "name": "rainbyepass",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "private": true,
   "license": "MIT",
   "description": "An offline-first, seasonal ambient virtual window.",

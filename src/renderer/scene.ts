@@ -1,6 +1,7 @@
 import type { Settings } from '../core/settings';
 import { SolarEngine, sunGeometry, travelOnArch, mix, colorMix, cssColor, clamp, type SolarState, type RGB } from '../core/solar';
 import { backingDensity, framePeriod, movingDust, movingWater } from '../core/render-policy';
+import { dustPhaseDelta } from '../core/dust';
 import { MotionClock, random, SelectionBag } from '../core/motion';
 import { windAt, locationKey, type ForecastCache } from '../core/weather';
 import { drawRegionalDust, drawRegionalForeground, drawRegionalLandscape, drawRegionalWater, regionalOutlooks, type RegionalOutlook } from './regional-landscapes';
@@ -122,7 +123,7 @@ export class Scene {
     this.state = { ...target, top: colorMix(this.state.top, target.top, a), horizon: colorMix(this.state.horizon, target.horizon, a), cloud: colorMix(this.state.cloud, target.cloud, a), daylight: mix(this.state.daylight, target.daylight, a), stars: mix(this.state.stars, target.stars, a), progress: this.state.sunVisible && target.sunVisible ? mix(this.state.progress, target.progress, a) : target.progress, moonProgress:this.state.moonVisible&&target.moonVisible?mix(this.state.moonProgress,target.moonProgress,a):target.moonProgress };
     this.clock.step(drawDt, this.settings, windAt(this.forecast, +now, locationKey(this.settings)));
     if (movingWater(this.settings)) this.waterPhase = (this.waterPhase + drawDt * this.settings.water.manualSpeedMultiplier * .7) % (Math.PI * 2);
-    if (movingDust(this.settings)) this.dustPhase += drawDt * this.settings.dust.manualSpeedMultiplier * .7;
+    if (movingDust(this.settings)) this.dustPhase += dustPhaseDelta(drawDt,this.settings.dust.manualSpeedMultiplier);
     if (this.settings.layers.tree && this.settings.tree.swayEnabled && this.clock.effective.frequency > 0 && this.clock.effective.amplitude > 0) this.poseAmplitude = this.clock.effective.amplitude;
     const distance = this.clock.cloudDistance - this.lastDistance; this.lastDistance = this.clock.cloudDistance;
     if (distance > 0) for (const cloud of this.clouds) {
