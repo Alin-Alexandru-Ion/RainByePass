@@ -160,6 +160,29 @@ export function drawRegionalWater(g: CanvasRenderingContext2D, style: RegionalOu
   g.restore();
 }
 
+/** Sparse, drifting sand curls over cached dry terrain; no extra canvas. */
+export function drawRegionalDust(g: CanvasRenderingContext2D, style: RegionalOutlook, width: number, height: number, horizon: number, daylight: number, phase: number): void {
+  if (style !== 'arabian-desert' && style !== 'latin-badlands') return;
+  const w=width,h=height,u=Math.min(w,h),ground=h-horizon,desert=style==='arabian-desert',rng=random(desert?27183:39147);
+  const color=cssColor(colorMix([134,142,145],desert?[246,218,170]:[238,190,155],daylight));
+  const span=w+u*.24,count=Math.min(24,Math.ceil(w/u*9));
+  g.save();g.beginPath();g.rect(0,horizon-u*.11,w,Math.max(0,ground+u*.09));g.clip();
+  g.strokeStyle=color;g.lineCap='round';
+  for(let i=0;i<count;i++){
+    const x=(rng()*span+phase*u*.009*(.65+rng()*.7))%span-u*.12;
+    const y=horizon+ground*(-.07+rng()*.83)+u*.004*Math.sin(phase*.7+i*1.7);
+    const curl=u*(.009+rng()*.013),tail=curl*(1.8+rng()*1.5);
+    g.globalAlpha=(desert?.24:.28)+rng()*.16;g.lineWidth=Math.max(.8,u*(.00075+rng()*.00055));
+    g.beginPath();g.moveTo(x-tail,y+curl*.25);
+    g.bezierCurveTo(x-tail*.45,y-curl*.32,x-curl*.55,y-curl*.65,x+curl*.12,y-curl*.5);
+    g.bezierCurveTo(x+curl*.95,y-curl*.25,x+curl*.75,y+curl*.47,x+curl*.12,y+curl*.35);
+    g.bezierCurveTo(x-curl*.2,y+curl*.21,x-curl*.1,y-curl*.14,x+curl*.16,y-curl*.1);g.stroke();
+    g.globalAlpha*=.62;g.beginPath();g.moveTo(x-tail*1.3,y+curl*.72);
+    g.quadraticCurveTo(x-tail*.65,y+curl*.4,x-curl*.3,y+curl*.66);g.stroke();
+  }
+  g.restore();
+}
+
 /** The nearby-tree switch keeps its meaning, but arid/coastal/mountain views get fitting branches. */
 export function drawRegionalForeground(g: CanvasRenderingContext2D, style: Exclude<RegionalOutlook, 'irish-lake'>, width: number, height: number, daylight: number, anchor: 'upper-left' | 'upper-right', phase: number, amplitude: number): void {
   const u=Math.min(width,height),pine=style==='american-mountains'||style==='japanese-ocean',desert=style==='arabian-desert';
