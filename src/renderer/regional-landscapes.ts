@@ -44,15 +44,6 @@ export function drawRegionalLandscape(g: CanvasRenderingContext2D, style: Region
     gradient.addColorStop(0,tone(far,.26));gradient.addColorStop(1,tone(near));
     g.fillStyle=gradient;g.fillRect(0,y,w,h-y);
   };
-  const ripples = (from: number, to: number, count: number, color: string) => {
-    g.save();g.strokeStyle=color;g.lineCap='round';
-    for(let i=0;i<count;i++){
-      const y=from+(to-from)*rng(),x=rng()*w,length=u*(.015+rng()*.07);
-      g.globalAlpha=.12+rng()*.23;g.lineWidth=Math.max(.7,u*(.0007+rng()*.0007));
-      g.beginPath();g.moveTo(x-length/2,y);g.quadraticCurveTo(x,y-u*.002,x+length/2,y);g.stroke();
-    }
-    g.restore();
-  };
   g.save();
   if (style === 'american-mountains') {
     ridge([[0,.03],[.08,-.12],[.15,-.04],[.27,-.31],[.37,-.10],[.48,-.24],[.61,-.03],[.75,-.27],[.88,-.05],[1,.04]],tone([94,119,133],.34));
@@ -89,7 +80,6 @@ export function drawRegionalLandscape(g: CanvasRenderingContext2D, style: Region
     polygon([[.22,.075],[.42,.025],[.58,.055],[.66,.082],[.66,.11],[.22,.11]],tone([72,112,78],.14));
     if(trees.length){g.save();g.filter=`saturate(.55) brightness(${(.37+daylight*.55).toFixed(2)})`;g.globalAlpha=.75;
       for(let i=0;i<21;i++){const x=w*(.225+i*.0205),im=trees[i%trees.length],tall=u*(.026+(i%4)*.006),wide=tall*im.width/im.height;g.drawImage(im,x-wide/2,base+u*.069-tall,wide,tall);}g.restore();}
-    ripples(base+u*.13,h-u*.05,Math.ceil(w/u*120),tone([215,224,210],.12));
     polygon([[0,.27],[.09,.19],[.17,.24],[.23,.36],[.17,1],[0,1]],tone([76,118,73]));
     polygon([[.75,.34],[.87,.20],[1,.25],[1,1],[.84,1]],tone([65,109,69]));
     scatteredGrass(Math.ceil(w/u*50),x=>base+u*(x<w*.21?.25+.12*x/w:x>w*.79?.26+.11*(1-x/w):1.2),u*.02,tone([42,88,63]));
@@ -100,9 +90,6 @@ export function drawRegionalLandscape(g: CanvasRenderingContext2D, style: Region
     polygon([[0,.16],[.10,.14],[.18,.19],[.21,.235],[.16,.26],[0,.25]],tone([48,94,99],.25));
     polygon([[.74,.15],[.82,.035],[.89,-.035],[1,-.07],[1,.37],[.92,.32],[.85,.24]],tone([55,91,85],.13));
     polygon([[.86,.26],[.91,.23],[.95,.27],[1,.25],[1,.48],[.89,.38]],tone([67,83,80],.08));
-    ripples(base+u*.09,h-u*.03,Math.ceil(w/u*170),tone([220,238,226],.09));
-    g.save();g.strokeStyle=tone([215,230,223],.12);g.globalAlpha=.42;g.lineWidth=Math.max(1,u*.002);
-    for(let i=0;i<7;i++){const y=base+u*(.19+i*.073),x=u*(i%2?-.05:.14);g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(w*.43,y-u*.022,w*.72,y+u*.008);g.stroke();}g.restore();
     polygon([[0,.75],[.07,.65],[.13,.72],[.16,1],[0,1]],tone([47,69,76]));
     polygon([[.91,.84],[1,.70],[1,1],[.88,1]],tone([46,65,72]));
   } else {
@@ -120,6 +107,39 @@ export function drawRegionalLandscape(g: CanvasRenderingContext2D, style: Region
   g.restore();
 }
 
+/** Small deterministic strokes over cached terrain; no animated terrain canvas or image allocation. */
+export function drawRegionalWater(g: CanvasRenderingContext2D, style: RegionalOutlook, width: number, height: number, horizon: number, daylight: number, horizonColor: RGB, phase: number): void {
+  if (style !== 'irish-lake' && style !== 'japanese-ocean') return;
+  const w=width,h=height,u=Math.min(w,h),lake=style==='irish-lake',rng=random(lake?83219:98417);
+  const from=horizon+u*(lake?.13:.09),to=h-u*.035;
+  const color=cssColor(colorMix(colorMix([79,115,129],lake?[214,225,210]:[221,237,229],daylight),horizonColor,.10));
+  const cut=(points:[number,number][])=>{g.moveTo(points[0][0]*w,horizon+points[0][1]*u);for(const [x,y] of points.slice(1))g.lineTo(x*w,horizon+y*u);g.closePath();};
+  g.save();g.beginPath();g.rect(0,from,w,h-from);
+  if(lake){
+    cut([[0,.27],[.09,.19],[.17,.24],[.23,.36],[.17,1],[0,1]]);
+    cut([[.75,.34],[.87,.20],[1,.25],[1,1],[.84,1]]);
+  }else{
+    cut([[0,.16],[.10,.14],[.18,.19],[.21,.235],[.16,.26],[0,.25]]);
+    cut([[.74,.15],[.82,.035],[.89,-.035],[1,-.07],[1,.37],[.92,.32],[.85,.24]]);
+    cut([[.86,.26],[.91,.23],[.95,.27],[1,.25],[1,.48],[.89,.38]]);
+    cut([[0,.75],[.07,.65],[.13,.72],[.16,1],[0,1]]);
+    cut([[.91,.84],[1,.70],[1,1],[.88,1]]);
+  }
+  g.clip('evenodd');g.strokeStyle=color;g.lineCap='round';
+  const count=Math.min(85,Math.ceil(w/u*(lake?48:65)));
+  for(let i=0;i<count;i++){
+    const depth=rng(),y=from+(to-from)*depth,x=rng()*w,length=u*(.016+rng()*(lake?.065:.085))*(.55+depth*.8);
+    const drift=u*.009*Math.sin(phase*.8+i*1.31),lift=u*.0025*Math.sin(phase+i*.79);
+    g.globalAlpha=(lake?.12:.10)+rng()*.20;g.lineWidth=Math.max(.7,u*(.0007+rng()*.0007));
+    g.beginPath();g.moveTo(x-length/2+drift,y+lift);g.quadraticCurveTo(x+drift,y+lift-u*.002,x+length/2+drift,y+lift);g.stroke();
+  }
+  if(!lake){
+    g.globalAlpha=.32;g.lineWidth=Math.max(1,u*.0018);
+    for(let i=0;i<7;i++){const y=horizon+u*(.19+i*.073)+u*.003*Math.sin(phase+i*.8),x=u*(i%2?-.05:.14)+u*.01*Math.sin(phase*.6+i);g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(w*.43,y-u*.022,w*.72,y+u*.008);g.stroke();}
+  }
+  g.restore();
+}
+
 /** The nearby-tree switch keeps its meaning, but arid/coastal/mountain views get fitting branches. */
 export function drawRegionalForeground(g: CanvasRenderingContext2D, style: Exclude<RegionalOutlook, 'irish-lake'>, width: number, height: number, daylight: number, anchor: 'upper-left' | 'upper-right', phase: number, amplitude: number): void {
   const u=Math.min(width,height),pine=style==='american-mountains'||style==='japanese-ocean',desert=style==='arabian-desert';
@@ -127,10 +147,11 @@ export function drawRegionalForeground(g: CanvasRenderingContext2D, style: Exclu
   const wood=shade(desert?[111,88,61]:style==='latin-badlands'?[92,63,54]:[69,67,55]);
   const foliage=shade(desert?[105,111,72]:style==='latin-badlands'?[103,91,68]:style==='american-mountains'?[49,91,71]:[44,88,77]);
   g.save();g.translate(anchor==='upper-left'?0:width,0);g.scale(anchor==='upper-left'?1:-1,1);
-  g.lineCap='round';g.strokeStyle=wood;g.lineWidth=u*(pine?.021:.014);
-  g.beginPath();g.moveTo(-u*.03,height*.12);g.bezierCurveTo(u*.06,height*.14,u*.12,height*.25,u*.39,height*.29);g.stroke();
+  const main=(t:number)=>{const q=1-t;return {x:q*q*q*(-u*.03)+3*q*q*t*u*.06+3*q*t*t*u*.12+t*t*t*u*.39,y:q*q*q*height*.12+3*q*q*t*height*.14+3*q*t*t*height*.25+t*t*t*height*.29};};
+  g.lineCap='round';g.strokeStyle=wood;
+  for(let part=0;part<4;part++){g.lineWidth=u*(pine?.023:.016)*(1-part*.20);g.beginPath();for(let step=0;step<=5;step++){const p=main((part+step/5)/4);if(step===0)g.moveTo(p.x,p.y);else g.lineTo(p.x,p.y);}g.stroke();}
   for(let branch=0;branch<6;branch++){
-    const x=u*(.06+branch*.052),y=height*(.145+branch*.023),length=u*(.12+(branch%3)*.027),up=branch%2===0?-1:1;
+    const {x,y}=main(.17+branch*.13),length=u*(.12+(branch%3)*.027)*(1-branch*.045),up=branch%2===0?-1:1;
     g.save();g.translate(x,y);g.rotate(Math.sin(phase*.46+branch*1.7)*.012*amplitude);
     g.strokeStyle=wood;g.lineWidth=u*(pine?.008:.0045);g.beginPath();g.moveTo(0,0);g.quadraticCurveTo(length*.42,up*length*.23,length,up*length*.28);g.stroke();
     const count=pine?9:desert?5:3;
@@ -138,7 +159,7 @@ export function drawRegionalForeground(g: CanvasRenderingContext2D, style: Exclu
       const t=i/(count+1),px=t*length,py=up*length*(.46*t-.18*t*t),size=u*(pine?.025:desert?.012:.008)*(1-.35*t);
       g.save();g.translate(px,py);g.rotate(Math.sin(phase*.7+branch+i*.83)*.03*amplitude);
       if(pine){g.strokeStyle=foliage;g.lineWidth=Math.max(.7,u*.0014);for(let needle=-3;needle<=3;needle++){g.beginPath();g.moveTo(0,0);g.lineTo(size*(.25+needle*.11),size*(needle*.22-.46));g.stroke();}}
-      else if(desert||i%2===0){g.fillStyle=foliage;g.beginPath();g.ellipse(size*.28,-size*.28,size*.38,size*.14,-.6,0,Math.PI*2);g.fill();}
+      else if(desert||i%2===0){g.strokeStyle=wood;g.lineWidth=Math.max(.5,u*.0008);g.beginPath();g.moveTo(0,0);g.lineTo(size*.16,-size*.20);g.stroke();g.fillStyle=foliage;g.beginPath();g.ellipse(size*.34,-size*.28,size*.38,size*.14,-.6,0,Math.PI*2);g.fill();}
       g.restore();
     }
     g.restore();

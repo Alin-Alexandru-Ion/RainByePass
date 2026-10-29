@@ -4,22 +4,24 @@ export type Mood = 'morning' | 'day' | 'evening' | 'night';
 export const outlookStyles = ['city', 'field', 'meadow', 'mountains', 'american-mountains', 'arabian-desert', 'irish-lake', 'japanese-ocean', 'latin-badlands'] as const;
 export type OutlookStyle = typeof outlookStyles[number];
 export interface Settings {
-  schemaVersion: 2;
+  schemaVersion: 3;
   solar: { automatic: boolean; manualMood: Mood; timeZone: string; latitude: number; longitude: number; label: string; reference: string; needsLocationSetup: boolean };
   layers: Record<Layer, boolean>;
   clouds: { movementEnabled: boolean; useForecastWind: boolean; manualSpeedMultiplier: number; coverage: number; maximumMotionMultiplier: number; seed: number };
   tree: { swayEnabled: boolean; useForecastWind: boolean; manualFrequencyMultiplier: number; manualAmplitudeMultiplier: number; maximumMotionMultiplier: number; anchor: 'upper-right' | 'upper-left'; seed: number };
+  water: { movementEnabled: boolean; manualSpeedMultiplier: number };
   appearance: { frameStyle: 'warm-wood' | 'white-wood' | 'dark-metal' | 'minimal'; crossbars: 'none' | 'single' | 'classic'; outlookStyle: OutlookStyle; horizonFraction: number; brightness: number; sunGlowIntensity: number; rayIntensity: number; starTwinkleEnabled: boolean; starTwinkleSpeedMultiplier: number };
   weather: { networkOptIn: boolean; projectContactUrl: string; preferredRefreshDays: number };
   rendering: { quality: 'low' | 'balanced' | 'high'; frameRateLimit: 15 | 30 | 60 };
   ui: { viewerMode: 'borderless' | 'fullscreen'; displayId: number | null };
 }
 export const defaults: Settings = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   solar: { automatic: true, manualMood: 'day', timeZone: 'Europe/Berlin', latitude: 53.55, longitude: 10, label: 'Hamburg area (approximate)', reference: 'Bundled Hamburg regional preset; confirm or override coordinates.', needsLocationSetup: true },
   layers: Object.fromEntries(layerNames.map(x => [x, x !== 'lightRays'])) as Record<Layer, boolean>,
   clouds: { movementEnabled: true, useForecastWind: false, manualSpeedMultiplier: 1, coverage: .3, maximumMotionMultiplier: 2, seed: 1401 },
   tree: { swayEnabled: true, useForecastWind: false, manualFrequencyMultiplier: 1, manualAmplitudeMultiplier: 1, maximumMotionMultiplier: 2, anchor: 'upper-right', seed: 1402 },
+  water: { movementEnabled: true, manualSpeedMultiplier: 1 },
   appearance: { frameStyle: 'warm-wood', crossbars: 'classic', outlookStyle: 'meadow', horizonFraction: .68, brightness: 1, sunGlowIntensity: .5, rayIntensity: .15, starTwinkleEnabled: false, starTwinkleSpeedMultiplier: 1 },
   weather: { networkOptIn: false, projectContactUrl: '', preferredRefreshDays: 7 },
   rendering: { quality: 'low', frameRateLimit: 15 },
@@ -57,6 +59,7 @@ export function validateSettings(input: unknown): Settings {
   result.tree.manualFrequencyMultiplier = clamp(result.tree.manualFrequencyMultiplier, 0, 3);
   result.tree.manualAmplitudeMultiplier = clamp(result.tree.manualAmplitudeMultiplier, 0, 3);
   result.tree.maximumMotionMultiplier = clamp(result.tree.maximumMotionMultiplier, .1, 3);
+  result.water.manualSpeedMultiplier = clamp(result.water.manualSpeedMultiplier, 0, 3);
   result.tree.anchor = pick(result.tree.anchor, ['upper-right', 'upper-left'], 'upper-right');
   for (const g of [result.clouds, result.tree]) g.seed = Math.abs(Math.trunc(g.seed)) % 2147483647;
   result.appearance.frameStyle = pick(result.appearance.frameStyle, ['warm-wood', 'white-wood', 'dark-metal', 'minimal'], 'warm-wood');

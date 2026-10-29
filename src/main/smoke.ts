@@ -46,7 +46,10 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
   win.setResizable(true);
   for(const [w,h]of sizes){win.setSize(w,h);await pause(200);captures.push(await js('window.rainTest.snapshot()'));await screenshot(`scene-${w}x${h}`);}
   win.setSize(520,420);await js('window.rainTest.showSettings()');await pause(200);
-  for(let i=0;i<11;i++){win.webContents.sendInputEvent({type:'keyDown',keyCode:'Tab'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Tab'});}
+  for(let i=0;i<30;i++){
+    if(await js('document.activeElement.dataset.setting')==='clouds.movementEnabled')break;
+    win.webContents.sendInputEvent({type:'keyDown',keyCode:'Tab'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Tab'});
+  }
   const keyboardBefore=await js('({path:document.activeElement.dataset.setting,checked:document.activeElement.checked})');
   win.webContents.sendInputEvent({type:'keyDown',keyCode:'Space'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Space'});await pause(250);
   const keyboardAfter=await js('({path:document.activeElement.dataset.setting,checked:document.activeElement.checked})');
@@ -65,7 +68,7 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
   win.webContents.sendInputEvent({type:'keyDown',keyCode:'F11'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'F11'});await pause(400);const f11=win.isFullScreen();
   win.webContents.sendInputEvent({type:'keyDown',keyCode:'Escape'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Escape'});await pause(600);
   const stopped={nativeFullscreen:win.isFullScreen(),bounds:win.getBounds(),snapshot:await js('window.rainTest.snapshot()')};await screenshot('stopped-settings');performance.push(await profile('settings after Stop'));
-  const checks={keyboardSettings,pointerTests,f11,escapeReturnedToSettings:!stopped.snapshot.viewing&&!stopped.nativeFullscreen,minimizedFrames:minimizedAfter.frames-minimizedBefore.frames,wasUnfocused,unfocusedFrames:unfocusedAfter.frames-unfocusedBefore.frames};
+  const checks={keyboardSettings,keyboardBefore,keyboardAfter,pointerTests,f11,escapeReturnedToSettings:!stopped.snapshot.viewing&&!stopped.nativeFullscreen,minimizedFrames:minimizedAfter.frames-minimizedBefore.frames,wasUnfocused,unfocusedFrames:unfocusedAfter.frames-unfocusedBefore.frames};
   const output={platform:process.platform,arch:process.arch,versions:process.versions,os:{release:os.release(),cpu:os.cpus()[0]?.model,logicalCpus:os.cpus().length},gpu:await app.getGPUInfo('basic'),displays:screen.getAllDisplays(),startup,stopped,result,checks,landscapes,landscapePerformance,monitorTests,captures,trajectory,performance,errors};
   await writeFile(path.join(directory,'smoke-results.json'),JSON.stringify(output,null,2));
   const failed=result.failed.length||errors.length||landscapes.length!==10||landscapes.some(x=>x.errors.length||x.renderedStyle!==x.style)||!Object.values(pointerTests).every(Boolean)||!keyboardSettings||!f11||!checks.escapeReturnedToSettings||checks.minimizedFrames!==0||!wasUnfocused||checks.unfocusedFrames===0;

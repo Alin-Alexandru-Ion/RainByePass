@@ -1,14 +1,14 @@
 import type { Settings } from '../core/settings';
 import { SolarEngine, sunGeometry, travelOnArch, mix, colorMix, cssColor, clamp, type SolarState, type RGB } from '../core/solar';
-import { backingDensity, framePeriod } from '../core/render-policy';
+import { backingDensity, framePeriod, movingWater } from '../core/render-policy';
 import { MotionClock, random, SelectionBag } from '../core/motion';
 import { windAt, locationKey, type ForecastCache } from '../core/weather';
-import { drawRegionalForeground, drawRegionalLandscape, regionalOutlooks, type RegionalOutlook } from './regional-landscapes';
+import { drawRegionalForeground, drawRegionalLandscape, drawRegionalWater, regionalOutlooks, type RegionalOutlook } from './regional-landscapes';
+import { buildCanopy, branchPoint, trunkPoint, twigPoint, type CanopyBranch } from './canopy';
 type Context = CanvasRenderingContext2D;
 const surface = () => document.createElement('canvas');
 const ctx = (canvas: HTMLCanvasElement, options?: CanvasRenderingContext2DSettings) => { const c = canvas.getContext('2d', options); if (!c) throw new Error('Canvas renderer unavailable. Restart or try another graphics configuration.'); return c; };
 interface Cloud { x: number; y: number; scale: number; depth: number; shape: number; }
-interface Leaf { t: number; offset: number; branch: number; size: number; angle: number; phase: number; kind: number; }
 /** Original scalable landscape, branch and cloud authoring lives here. No remote scene assets. */
 export class Scene {
   clock = new MotionClock(); solar = new SolarEngine(); forecast: ForecastCache | null = null;
@@ -16,11 +16,12 @@ export class Scene {
   errors: string[] = []; nowOverride: Date | null = null; recording = false;
   private context: Context; private terrain = surface(); private tree = surface(); private cloudLayer = surface(); private frame = surface(); private rayLayer = surface(); private mask = surface();
   private terrainKey = ''; private treeRenderKey = ''; private cloudRenderKey = ''; private frameKey = ''; private cloudTintKey = ''; private coloredClouds: HTMLCanvasElement[] = [];
-  private cloudMasks: (HTMLCanvasElement | undefined)[] = []; private clouds: Cloud[] = []; private leaves: Leaf[] = []; private leafImages: HTMLImageElement[] = []; private tintedLeaves: HTMLCanvasElement[] = [];
+  private cloudMasks: (HTMLCanvasElement | undefined)[] = []; private clouds: Cloud[] = []; private canopy: CanopyBranch[] = []; private leafImages: HTMLImageElement[] = []; private tintedLeaves: HTMLCanvasElement[] = [];
   private grassImages: HTMLImageElement[] = []; private forestTrees: HTMLImageElement[] = []; private tintedGrass: HTMLCanvasElement[] = [];
   private leafTint = ''; private grassTint = ''; private wood: HTMLImageElement | null = null; private stars: { x: number; y: number; r: number; phase: number }[] = [];
   private rng: () => number; private bag: SelectionBag; private last = 0; private lastDraw = 0; private lastSolar = 0; private lastRay = 0; private lastDistance = 0; private poseAmplitude = 1;
   private suspended = false; private running = false; private windowMinimized = false; private treeSeed = -1; private cloudSeed = -1; private raf = 0; private nextDraw = 0;
+  private waterPhase = 0;
   private timer: ReturnType<typeof setTimeout> | null = null; private resourceGeneration = 0;
   private targetState: SolarState;
   constructor(public canvas: HTMLCanvasElement, public settings: Settings) {
@@ -54,8 +55,7 @@ export class Scene {
       this.clouds = Array.from({ length: 9 }, (_, i) => ({ x: -.25 + i * .18, y: .13 + this.rng() * .26, scale: .75 + this.rng() * .7, depth: .65 + this.rng() * .45, shape: this.bag.next() })); this.cloudTintKey = '';
     }
     if (this.treeSeed !== this.settings.tree.seed) {
-      this.treeSeed = this.settings.tree.seed; const r = random(this.treeSeed);
-      this.leaves = Array.from({ length: 135 }, (_, i) => { const sprig = r() < .12; return { branch: i % 4, t: .1 + r() * .86, offset: (r() - .5) * .09, size: (sprig ? .043 : .025) + r() * .029, angle: -.9 + r() * 2.4, phase: r() * Math.PI * 2, kind: sprig ? 5 + Math.floor(r() * 2) : Math.floor(r() * 5) }; });
+      this.treeSeed = this.settings.tree.seed; this.canopy = buildCanopy(this.treeSeed);
     }
     const r = random(48210); this.stars = Array.from({ length: 140 }, () => ({ x: r(), y: r() * .65, r: .45 + r(), phase: r() * 6.28 }));
   }
@@ -120,6 +120,7 @@ export class Scene {
     const target = this.targetState, a = 1 - Math.exp(-lightingDt / 1.5);
     this.state = { ...target, top: colorMix(this.state.top, target.top, a), horizon: colorMix(this.state.horizon, target.horizon, a), cloud: colorMix(this.state.cloud, target.cloud, a), daylight: mix(this.state.daylight, target.daylight, a), stars: mix(this.state.stars, target.stars, a), progress: this.state.sunVisible && target.sunVisible ? mix(this.state.progress, target.progress, a) : target.progress, moonProgress:this.state.moonVisible&&target.moonVisible?mix(this.state.moonProgress,target.moonProgress,a):target.moonProgress };
     this.clock.step(drawDt, this.settings, windAt(this.forecast, +now, locationKey(this.settings)));
+    if (movingWater(this.settings)) this.waterPhase = (this.waterPhase + drawDt * this.settings.water.manualSpeedMultiplier * .7) % (Math.PI * 2);
     if (this.settings.layers.tree && this.settings.tree.swayEnabled && this.clock.effective.frequency > 0 && this.clock.effective.amplitude > 0) this.poseAmplitude = this.clock.effective.amplitude;
     const distance = this.clock.cloudDistance - this.lastDistance; this.lastDistance = this.clock.cloudDistance;
     if (distance > 0) for (const cloud of this.clouds) {
@@ -153,7 +154,10 @@ export class Scene {
     }
     if (l.clouds) { this.drawClouds(); g.drawImage(this.cloudLayer, 0, 0, w, h); }
     g.restore();
-    if (l.outlook) { this.drawTerrain(); g.drawImage(this.terrain, 0, 0, w, h); }
+    if (l.outlook) {
+      this.drawTerrain(); g.drawImage(this.terrain, 0, 0, w, h);
+      if (s.appearance.outlookStyle === 'irish-lake' || s.appearance.outlookStyle === 'japanese-ocean') drawRegionalWater(g,s.appearance.outlookStyle,w,h,horizon,state.daylight,state.horizon,this.waterPhase);
+    }
     if (l.tree) this.drawTree();
     if (l.lightRays && l.tree && l.sun && state.sunVisible && s.appearance.rayIntensity > 0 && sun.y < horizon - sun.radius) {
       if (time - this.lastRay > ({low:250,balanced:200,high:120}[s.rendering.quality])) { this.drawRays(sun); this.lastRay = time; }
@@ -270,18 +274,40 @@ export class Scene {
     g.save(); const left = this.settings.tree.anchor === 'upper-left'; g.translate(left ? 0 : w, 0); g.scale(left ? 1 : -1, 1);
     const phase = this.clock.tree, amplitude = this.poseAmplitude;
     g.strokeStyle = cssColor(colorMix([28, 38, 45], [88, 79, 49], state.daylight)); g.lineCap = 'round';
-    g.lineWidth = u * .042; g.beginPath(); g.moveTo(-u * .025, h * .80); g.bezierCurveTo(u * .018, h * .49, u * .035, u * .08, -u * .03, -u * .08); g.stroke();
-    for (let branch = 0; branch < 4; branch++) {
-      const by = u * (.04 + branch * .058), length = u * (.31 + branch * .071), sway = Math.sin(phase * .38 + branch) * .005 * amplitude;
-      g.save(); g.translate(u * .006, by); g.rotate(sway);
-      g.lineWidth = u * (.014 - branch * .0018); g.beginPath(); g.moveTo(0, 0); g.bezierCurveTo(length * .27, length * .04, length * .54, length * .27, length, length * .36); g.stroke(); g.restore();
-    }
-    for (const leaf of this.leaves) {
-      const sway = Math.sin(phase * .48 + leaf.phase) * .007 * amplitude + Math.sin(phase * .91 + leaf.phase * 2) * .002 * amplitude;
-      const t = leaf.t, length = u * (.31 + leaf.branch * .071), by = u * (.04 + leaf.branch * .058);
-      const x = length * (3 * (1 - t) ** 2 * t * .27 + 3 * (1 - t) * t ** 2 * .54 + t ** 3), y = length * (3 * (1 - t) ** 2 * t * .04 + 3 * (1 - t) * t ** 2 * .27 + t ** 3 * .36), offset = leaf.offset * u;
-      const size = leaf.size * u, image = this.tintedLeaves[leaf.kind];
-      g.save(); g.translate(u * .006, by); g.rotate(Math.sin(phase * .38 + leaf.branch) * .005 * amplitude); g.lineWidth = u * .0013; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + offset); g.stroke(); g.translate(x, y + offset); g.rotate(leaf.angle + sway * 3); if (image) { const aspect = image.width / image.height; g.drawImage(image, -size * aspect / 2, -size, size * aspect, size); } else { g.fillStyle = cssColor(tint); g.beginPath(); g.ellipse(0, -size / 2, size * .25, size / 2, 0, 0, Math.PI * 2); g.fill(); } g.restore();
+    const strokeStem=(point:(t:number)=>{x:number;y:number},width:number)=>{
+      for(let part=0;part<4;part++){
+        g.lineWidth=width*(1-part*.22);g.beginPath();
+        for(let step=0;step<=5;step++){const p=point((part+step/5)/4);if(step===0)g.moveTo(p.x,p.y);else g.lineTo(p.x,p.y);}g.stroke();
+      }
+    };
+    strokeStem(t=>trunkPoint(u,h,t),u*.053);
+    for(const branch of this.canopy){
+      const root=trunkPoint(u,h,branch.trunkT);
+      g.save();g.translate(root.x,root.y);g.rotate(Math.sin(phase*.38+branch.phase)*.004*amplitude);
+      strokeStem(t=>branchPoint(branch,u,t),u*.017);
+      for(const twig of branch.twigs){
+        const joint=branchPoint(branch,u,twig.t);
+        g.save();g.translate(joint.x,joint.y);g.rotate(Math.sin(phase*.59+twig.phase)*.010*amplitude);
+        const twigMid=twigPoint(twig,u,.5),twigEnd=twigPoint(twig,u,1);
+        g.lineWidth=u*.0032;g.beginPath();g.moveTo(0,0);g.quadraticCurveTo(twigMid.x*2-twigEnd.x*.5,twigMid.y*2-twigEnd.y*.5,twigEnd.x,twigEnd.y);g.stroke();
+        for(const leaf of twig.leaves){
+          const node=twigPoint(twig,u,leaf.t),before=twigPoint(twig,u,Math.max(0,leaf.t-.02));
+          const dx=node.x-before.x,dy=node.y-before.y,mag=Math.hypot(dx,dy)||1;
+          const tx=dx/mag,ty=dy/mag,side=leaf.side;
+          const vx=side===0?tx:tx*.22+ty*side*.95,vy=side===0?ty:ty*.22-tx*side*.95;
+          const vm=Math.hypot(vx,vy)||1,stem=side===0?u*.003:u*.011;
+          const endX=node.x+vx/vm*stem,endY=node.y+vy/vm*stem,size=leaf.size*u,image=this.tintedLeaves[leaf.kind];
+          g.lineWidth=u*.0011;g.beginPath();g.moveTo(node.x,node.y);g.lineTo(endX,endY);g.stroke();
+          g.save();g.translate(endX,endY);g.rotate(Math.atan2(vx,-vy)+Math.sin(phase*.84+leaf.phase)*.018*amplitude);
+          if(image){const aspect=image.width/image.height;g.drawImage(image,leaf.kind>=5?-size*aspect*.16:-size*aspect/2,-size,size*aspect,size);}
+          else{g.fillStyle=cssColor(tint);g.beginPath();g.ellipse(0,-size/2,size*.25,size/2,0,0,Math.PI*2);g.fill();}
+          g.restore();
+        }
+        g.restore();
+      }
+      const tip=branchPoint(branch,u,1),before=branchPoint(branch,u,.98),tipImage=this.tintedLeaves[5+this.canopy.indexOf(branch)%2];
+      if(tipImage){const size=u*.034,aspect=tipImage.width/tipImage.height;g.save();g.translate(tip.x,tip.y);g.rotate(Math.atan2(tip.x-before.x,-(tip.y-before.y)));g.drawImage(tipImage,-size*aspect*.16,-size,size*aspect,size);g.restore();}
+      g.restore();
     }
     g.restore();
   }
@@ -325,5 +351,5 @@ export class Scene {
     }
     if (s.frameStyle === 'warm-wood' || s.frameStyle === 'white-wood') { const sill = g.createLinearGradient(0, h - thickness * .6, 0, h); sill.addColorStop(0, s.frameStyle === 'warm-wood' ? '#b48c63' : '#dedbcc'); sill.addColorStop(1, s.frameStyle === 'warm-wood' ? '#775741' : '#a9aea9'); g.fillStyle = sill; g.fillRect(0, h - thickness * .45, w, thickness * .45); }
   }
-  snapshot() { return { running:this.running,frames: this.frames, width: this.width, height: this.height, backing: [this.canvas.width, this.canvas.height], density: this.density, outlookStyle:this.settings.appearance.outlookStyle,terrainStyle:this.terrainKey.split(':')[2]??null,bufferPixels:[this.canvas,this.terrain,this.tree,this.cloudLayer,this.frame,this.rayLayer,this.mask].reduce((n,c)=>n+c.width*c.height,0),texturePixels:[...this.cloudMasks,...this.coloredClouds,...this.tintedLeaves,...this.tintedGrass].reduce((n,c)=>n+(c?c.width*c.height:0),0)+(this.wood?this.wood.width*this.wood.height:0)+[...this.leafImages,...this.grassImages,...this.forestTrees].reduce((n,c)=>n+c.width*c.height,0),cloudClock: this.clock.cloud, treeClock: this.clock.tree, clouds: this.clouds.map(c => ({ ...c })), errors: this.errors, rayPasses: this.rayPasses }; }
+  snapshot() { return { running:this.running,frames: this.frames, width: this.width, height: this.height, backing: [this.canvas.width, this.canvas.height], density: this.density, outlookStyle:this.settings.appearance.outlookStyle,terrainStyle:this.terrainKey.split(':')[2]??null,bufferPixels:[this.canvas,this.terrain,this.tree,this.cloudLayer,this.frame,this.rayLayer,this.mask].reduce((n,c)=>n+c.width*c.height,0),texturePixels:[...this.cloudMasks,...this.coloredClouds,...this.tintedLeaves,...this.tintedGrass].reduce((n,c)=>n+(c?c.width*c.height:0),0)+(this.wood?this.wood.width*this.wood.height:0)+[...this.leafImages,...this.grassImages,...this.forestTrees].reduce((n,c)=>n+c.width*c.height,0),cloudClock: this.clock.cloud, treeClock: this.clock.tree, waterPhase:this.waterPhase, clouds: this.clouds.map(c => ({ ...c })), errors: this.errors, rayPasses: this.rayPasses }; }
 }
