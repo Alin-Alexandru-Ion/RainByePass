@@ -5,6 +5,18 @@ import type { OutlookStyle } from '../core/settings';
 export const regionalOutlooks = ['american-mountains', 'arabian-desert', 'irish-lake', 'japanese-ocean', 'latin-badlands'] as const;
 export type RegionalOutlook = Extract<OutlookStyle, typeof regionalOutlooks[number]>;
 
+/** Height of a piecewise-linear ridge at a horizontal screen fraction. */
+function ridgeHeight(points: [number, number][], x: number): number {
+  if (x <= points[0][0]) return points[0][1];
+  for (let i = 1; i < points.length; i++) {
+    if (x <= points[i][0]) {
+      const [ax, ay] = points[i - 1], [bx, by] = points[i];
+      return ay + (by - ay) * (x - ax) / (bx - ax);
+    }
+  }
+  return points[points.length - 1][1];
+}
+
 interface Landscape {
   width: number;
   height: number;
@@ -51,13 +63,15 @@ export function drawRegionalLandscape(g: CanvasRenderingContext2D, style: Region
       polygon([[x-span*.55,y+.045],[x,y],[x+span*.6,y+.045],[x+span*.22,y+.034],[x,y+.039],[x-span*.18,y+.033]],tone([218,225,218],.2));
     }
     ridge([[0,.11],[.09,-.02],[.17,.10],[.32,-.13],[.43,.12],[.58,-.10],[.72,.10],[.85,-.14],[1,.08]],tone([76,111,114],.20));
-    ridge([[0,.21],[.13,.12],[.29,.18],[.45,.075],[.59,.16],[.76,.07],[.9,.18],[1,.12]],tone([69,107,83],.07));
+    const treeRidge: [number,number][] = [[0,.21],[.13,.12],[.29,.18],[.45,.075],[.59,.16],[.76,.07],[.9,.18],[1,.12]];
     // Three layered triangles give varied evergreen silhouettes without decoded image assets.
     for(let x=-u*.02;x<w+u*.03;x+=u*(.014+rng()*.014)){
-      const y=base+u*(.13+.025*Math.sin(x/u*4)),size=u*(.026+rng()*.035);
+      const y=base+u*(ridgeHeight(treeRidge,x/w)+.008),size=u*(.026+rng()*.035);
       g.fillStyle=tone([48,82,68],.08);g.fillRect(x-size*.05,y-size*.2,size*.1,size*.22);
       for(let tier=0;tier<3;tier++){const top=y-size*(1-tier*.27),half=size*(.23+tier*.06);g.beginPath();g.moveTo(x,top);g.lineTo(x-half,y-size*(.22+tier*.03));g.lineTo(x+half,y-size*(.22+tier*.03));g.closePath();g.fill();}
     }
+    // Cover the embedded trunk ends with the same ridge used to position them.
+    ridge(treeRidge,tone([69,107,83],.07));
     ridge([[0,.36],[.15,.29],[.3,.33],[.47,.23],[.65,.31],[.83,.22],[1,.30]],tone([71,105,75]));
     scatteredGrass(Math.ceil(w/u*75),x=>base+u*(.30+.035*Math.sin(x/u*3.8)),u*.015,tone([45,83,58]));
   } else if (style === 'arabian-desert') {
@@ -77,9 +91,15 @@ export function drawRegionalLandscape(g: CanvasRenderingContext2D, style: Region
     ridge([[0,-.02],[.13,-.12],[.27,-.04],[.43,-.18],[.57,-.085],[.73,-.15],[.88,-.045],[1,-.12]],tone([98,132,123],.32));
     ridge([[0,.07],[.17,-.015],[.34,.045],[.52,-.045],[.71,.035],[.85,-.03],[1,.06]],tone([70,112,91],.2));
     water(base+u*.07,[38,83,91],[105,145,149]);
-    polygon([[.22,.075],[.42,.025],[.58,.055],[.66,.082],[.66,.11],[.22,.11]],tone([72,112,78],.14));
+    const islandRidge: [number,number][] = [[.22,.075],[.42,.025],[.58,.055],[.66,.082]];
     if(trees.length){g.save();g.filter=`saturate(.55) brightness(${(.37+daylight*.55).toFixed(2)})`;g.globalAlpha=.75;
-      for(let i=0;i<21;i++){const x=w*(.225+i*.0205),im=trees[i%trees.length],tall=u*(.026+(i%4)*.006),wide=tall*im.width/im.height;g.drawImage(im,x-wide/2,base+u*.069-tall,wide,tall);}g.restore();}
+      for(let i=0;i<21;i++){
+        const fraction=.235+i*.0201+(rng()-.5)*.005,x=w*fraction,root=base+u*(ridgeHeight(islandRidge,fraction)+.003);
+        const im=trees[Math.floor(rng()*trees.length)],tall=u*(.027+rng()*.020),wide=tall*im.width/im.height;
+        g.drawImage(im,x-wide/2,root-tall,wide,tall);
+      }
+      g.restore();}
+    polygon([...islandRidge,[.66,.11],[.22,.11]],tone([72,112,78],.14));
     polygon([[0,.27],[.09,.19],[.17,.24],[.23,.36],[.17,1],[0,1]],tone([76,118,73]));
     polygon([[.75,.34],[.87,.20],[1,.25],[1,1],[.84,1]],tone([65,109,69]));
     scatteredGrass(Math.ceil(w/u*50),x=>base+u*(x<w*.21?.25+.12*x/w:x>w*.79?.26+.11*(1-x/w):1.2),u*.02,tone([42,88,63]));

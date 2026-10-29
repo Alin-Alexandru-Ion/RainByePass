@@ -201,37 +201,57 @@ export class Scene {
         g.lineTo(w + u * .4, h); g.closePath(); g.fillStyle = tint([61 + layer * 5, 99 + layer * 9, 111 - layer * 6], .3 - layer * .07); g.fill();
       }
     } else if (s.appearance.outlookStyle === 'city') {
+      const facades:RGB[]=[[178,162,145],[165,174,163],[189,170,151],[174,157,151],[180,176,158]];
+      const roofs:RGB[]=[[119,96,91],[103,106,105],[139,105,90]];
       for (let layer = 0; layer < 3; layer++) {
-        let x = -30; while (x < w + 100) {
-          const width = u * (.04 + r() * .085), height = u * (.026 + r() * .105), roof = u * (.012 + r() * .018), y = base + layer * u * .038;
-          g.fillStyle = tint([129 + layer * 7, 142 - layer * 10, 130 - layer * 13], .22 - layer * .05); g.fillRect(x, y - height, width, h - y + height);
-          g.fillStyle = tint([107 + layer * 9, 111 - layer * 6, 108 - layer * 4], .2 - layer * .06); g.beginPath(); g.moveTo(x - 3, y - height); g.lineTo(x + width * .5, y - height - roof); g.lineTo(x + width + 3, y - height); g.closePath(); g.fill();
-          for (let row = 0; row < 3; row++) for (let col = 0; col < 3; col++) { g.fillStyle = state.daylight < .4 && r() > .35 ? '#bdaa78' : tint([94, 118, 120]); g.fillRect(x + width * (.17 + col * .25), y - height + height * (.15 + row * .27), width * .09, height * .12); }
+        let x = -30,building=0; while (x < w + 100) {
+          const width = u * (.04 + r() * .085), height = u * (.026 + r() * .105), roof = u * (.012 + r() * .018), y = base + layer * u * .038, top=y-height;
+          const facade=facades[(building+layer*2)%facades.length],depth=.22-layer*.05;
+          g.fillStyle=tint(facade,depth);g.fillRect(x,top,width,h-top);
+          // A side strip and continuous floor bands break up the long foreground façades.
+          g.fillStyle=tint([facade[0]-22,facade[1]-22,facade[2]-20],depth);g.fillRect(x+width*.91,top,width*.09,h-top);
+          g.fillStyle=tint(roofs[(building+layer)%roofs.length],.2-layer*.05);g.beginPath();g.moveTo(x-3,top);g.lineTo(x+width*.5,top-roof);g.lineTo(x+width+3,top);g.closePath();g.fill();
+          g.fillStyle=tint([facade[0]+19,facade[1]+15,facade[2]+12],depth);g.fillRect(x-1,top,width+2,Math.max(1,u*.002));
+          const columns=Math.max(2,Math.min(5,Math.round(width/(u*.024)))),inset=width*.075,cell=(width-2*inset)/columns,paneWidth=cell*.63;
+          const rowStep=u*(layer===0?.035:.038),paneHeight=rowStep*.56;
+          for(let row=0,rowY=top+u*.018;rowY+paneHeight<h-u*.012;row++,rowY+=rowStep){
+            if(row>0&&row%3===0){g.fillStyle=tint([facade[0]+12,facade[1]+10,facade[2]+7],depth);g.fillRect(x,rowY-u*.009,width,Math.max(1,u*.002));}
+            for(let col=0;col<columns;col++){
+              const px=x+inset+col*cell+(cell-paneWidth)/2,lit=state.daylight<.4&&r()>.73;
+              g.fillStyle=tint([215,204,182],depth);g.fillRect(px-u*.0015,rowY-u*.0015,paneWidth+u*.003,paneHeight+u*.003);
+              g.fillStyle=lit?'#cbb27b':tint([72,102,111],depth);g.fillRect(px,rowY,paneWidth,paneHeight);
+              g.fillStyle=tint([facade[0]+23,facade[1]+19,facade[2]+15],depth);g.fillRect(px-u*.002,rowY+paneHeight+u*.001,paneWidth+u*.004,Math.max(1,u*.002));
+            }
+          }
+          building++;
           x += width + u * .004;
         }
       }
     } else {
-      for (let layer = 0; layer < 4; layer++) {
-        const start = base + layer * h * .067; g.beginPath(); g.moveTo(0, h); g.lineTo(0, start);
-        for (let x = 0; x <= w + 20; x += 20) { const y = start + u * (.018 + layer * .006) * Math.sin(x / u * (3.7 + layer) + layer * 2) + u * .013 * Math.sin(x / u * 9 + layer); g.lineTo(x, y); }
-        g.lineTo(w + 20, h); g.closePath(); g.fillStyle = tint(s.appearance.outlookStyle === 'field' ? [136 - layer * 13, 161 - layer * 10, 99 - layer * 7] : [112 - layer * 12, 154 - layer * 13, 109 - layer * 8], .22 - layer * .06); g.fill();
-        if (layer === 0 && s.appearance.outlookStyle === 'meadow' && this.forestTrees.length) {
-          g.save();
-          for (let depth=0;depth<2;depth++) {
-            const trees=random(19214+depth*157);g.globalAlpha=depth===0?.42:.86;g.filter=`saturate(.43) brightness(${(.28+state.daylight*(depth===0?.62:.59)).toFixed(2)})`;
-            for (let x=-u*.03; x<w+u*.04; x+=u*(.014+trees()*.015)) {
-              if(trees()<.065)continue;
-              const im=this.forestTrees[Math.floor(trees()*this.forestTrees.length)];const height=u*(depth===0?.030:.047)+trees()*u*(depth===0?.025:.040),width=height*im.width/im.height;
-              const y=base+u*.018*Math.sin(x/u*3.7)+u*.013*Math.sin(x/u*9)+u*(depth===0?-.018:.012);
-              g.save();g.translate(x,y);if(trees()>.5)g.scale(-1,1);g.drawImage(im,-width/2,-height,width,height);g.restore();
-            }
-          }
-          g.restore();
+      const hillTop=(layer:number,x:number)=>base+layer*h*.067+u*(.018+layer*.006)*Math.sin(x/u*(3.7+layer)+layer*2)+u*.013*Math.sin(x/u*9+layer);
+      const forestDepth=(depth:0|1)=>{
+        const trees=random(19214+depth*157);
+        g.save();g.globalAlpha=depth===0?.42:.86;g.filter=`saturate(.43) brightness(${(.28+state.daylight*(depth===0?.62:.59)).toFixed(2)})`;
+        for(let x=-u*.03;x<w+u*.04;x+=u*(.014+trees()*.015)){
+          if(trees()<.065)continue;
+          const im=this.forestTrees[Math.floor(trees()*this.forestTrees.length)],treeHeight=u*(depth===0?.030:.047)+trees()*u*(depth===0?.025:.040),treeWidth=treeHeight*im.width/im.height;
+          const root=hillTop(0,x)+u*.003;
+          g.save();g.translate(x,root);if(trees()>.5)g.scale(-1,1);g.drawImage(im,-treeWidth/2,-treeHeight,treeWidth,treeHeight);g.restore();
         }
+        g.restore();
+      };
+      for (let layer = 0; layer < 4; layer++) {
+        // The far treeline is behind the hill, so the hill covers every root.
+        if(layer===0&&s.appearance.outlookStyle==='meadow'&&this.forestTrees.length)forestDepth(0);
+        const start = base + layer * h * .067; g.beginPath(); g.moveTo(0, h); g.lineTo(0, start);
+        for (let x = 0; x <= w + 20; x += 20) g.lineTo(x,hillTop(layer,x));
+        g.lineTo(w + 20, h); g.closePath(); g.fillStyle = tint(s.appearance.outlookStyle === 'field' ? [136 - layer * 13, 161 - layer * 10, 99 - layer * 7] : [112 - layer * 12, 154 - layer * 13, 109 - layer * 8], .22 - layer * .06); g.fill();
+        // The near treeline touches this exact profile, a few pixels into the grass.
+        if(layer===0&&s.appearance.outlookStyle==='meadow'&&this.forestTrees.length)forestDepth(1);
         if (this.tintedGrass.length) {
           const grass=random(9250+layer*143),count=Math.min(110,Math.ceil(w/u*(14+layer*9)));g.save();g.globalAlpha=.52+layer*.09;
           for(let n=0;n<count;n++){
-            const x=(n+grass()*.8)*w/count,top=start+u*(.018+layer*.006)*Math.sin(x/u*(3.7+layer)+layer*2)+u*.013*Math.sin(x/u*9+layer);
+            const x=(n+grass()*.8)*w/count,top=hillTop(layer,x);
             const image=this.tintedGrass[Math.floor(grass()*this.tintedGrass.length)],height=u*(.012+layer*.004)*(.68+grass()*.68),width=height*image.width/image.height;
             g.save();g.translate(x,top+u*.003);if(grass()>.5)g.scale(-1,1);g.drawImage(image,-width/2,-height,width,height);g.restore();
           }

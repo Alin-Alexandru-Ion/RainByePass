@@ -14,6 +14,8 @@ The Latin American choice follows the owner's **arid badlands** preference. All 
 
 Landscapes share the existing sun, moon, sky, stars, clouds, window frame and solar schedule. Selecting a distant view never changes coordinates or time zone. **Distant view** hides all terrain for every choice; **Nearby tree** independently hides the contextual foreground branch. The existing motion, ray and layer controls still apply. Terrain is deterministic and cached; it is regenerated on size, style or meaningful lighting changes, rather than every animation frame. The viewer still starts only after **Mood Boost** and releases canvases on **Stop**.
 
+Tree roots in the American mountains now follow the actual piecewise ridge profile, and the Irish island trees follow its sloped shoreline. Both terrain fills cover the embedded trunk ends. Meadow forest trees use the same hill-height function as the grass and hill polygon; the distant row sits behind the hill and the nearer row meets its visible edge. These placement changes do not add per-frame work.
+
 These are provisional stylized compositions. Since 29 October 2026, the Irish lake and Japanese ocean have subtle animated wave strokes drawn over the cached landscape. Water movement and speed are independent controls; waves stop when their scene is hidden or when the speed is zero. No water simulation or audio was added. Original procedural scenery is MIT licensed by Alin-Alexandru Ion; reused Kenney ingredients retain their CC0 provenance. Final visual art direction remains open.
 
 ## Windows resource and visual check

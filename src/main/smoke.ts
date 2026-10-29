@@ -21,7 +21,7 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
   const landscapes:any[]=[];
   for(const mood of ['day','night']){
     await js(`window.rainTest.mood(${JSON.stringify(mood)})`);
-    for(const style of ['american-mountains','arabian-desert','irish-lake','japanese-ocean','latin-badlands']){
+    for(const style of ['city','american-mountains','arabian-desert','irish-lake','japanese-ocean','latin-badlands']){
       await js(`window.rainTest.outlook(${JSON.stringify(style)})`);await pause(350);
       const scene=await js('window.rainTest.snapshot()');await screenshot(`landscape-${style}-${mood}`);
       landscapes.push({style,mood,renderedStyle:scene.terrainStyle,frames:scene.frames,errors:scene.errors});
@@ -29,13 +29,16 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
   }
   const landscapePerformance:any[]=[];
   await js("window.rainTest.mood('day')");
-  for(const style of ['american-mountains','arabian-desert','irish-lake','japanese-ocean','latin-badlands']){
+  for(const style of ['city','american-mountains','arabian-desert','irish-lake','japanese-ocean','latin-badlands']){
     await js(`window.rainTest.outlook(${JSON.stringify(style)})`);await pause(300);
     landscapePerformance.push(await profile(`${style} at default 15 fps`,quick?2500:5000));
   }
   await js("window.rainTest.outlook('meadow')");
   const monitorTests:any[]=[];
   for(const d of screen.getAllDisplays()){await viewer.start(d,'borderless');await pause(200);monitorTests.push({requested:d.id,actual:screen.getDisplayMatching(win.getBounds()).id,bounds:win.getBounds()});}
+  // Native display moves can leave a packaged window unfocused. Establish the
+  // same hidden-overlay starting state before sending real pointer input.
+  await js('window.rainTest.hideSettings()');win.show();win.focus();win.webContents.focus();await pause(300);
   const click=()=>{const [w,h]=win.getSize(),x=Math.round(w*.3),y=Math.round(h*.65);win.webContents.sendInputEvent({type:'mouseDown',x,y,button:'left',clickCount:1});win.webContents.sendInputEvent({type:'mouseUp',x,y,button:'left',clickCount:1});};
   click();await pause(600);const singleShows=(await js('window.rainTest.snapshot()')).overlay===true;
   click();await pause(600);const singleHides=(await js('window.rainTest.snapshot()')).overlay===false;
@@ -71,6 +74,6 @@ export async function smokeApplication(win:BrowserWindow,viewer:ViewerWindow,dir
   const checks={keyboardSettings,keyboardBefore,keyboardAfter,pointerTests,f11,escapeReturnedToSettings:!stopped.snapshot.viewing&&!stopped.nativeFullscreen,minimizedFrames:minimizedAfter.frames-minimizedBefore.frames,wasUnfocused,unfocusedFrames:unfocusedAfter.frames-unfocusedBefore.frames};
   const output={platform:process.platform,arch:process.arch,versions:process.versions,os:{release:os.release(),cpu:os.cpus()[0]?.model,logicalCpus:os.cpus().length},gpu:await app.getGPUInfo('basic'),displays:screen.getAllDisplays(),startup,stopped,result,checks,landscapes,landscapePerformance,monitorTests,captures,trajectory,performance,errors};
   await writeFile(path.join(directory,'smoke-results.json'),JSON.stringify(output,null,2));
-  const failed=result.failed.length||errors.length||landscapes.length!==10||landscapes.some(x=>x.errors.length||x.renderedStyle!==x.style)||!Object.values(pointerTests).every(Boolean)||!keyboardSettings||!f11||!checks.escapeReturnedToSettings||checks.minimizedFrames!==0||!wasUnfocused||checks.unfocusedFrames===0;
+  const failed=result.failed.length||errors.length||landscapes.length!==12||landscapes.some(x=>x.errors.length||x.renderedStyle!==x.style)||!Object.values(pointerTests).every(Boolean)||!keyboardSettings||!f11||!checks.escapeReturnedToSettings||checks.minimizedFrames!==0||!wasUnfocused||checks.unfocusedFrames===0;
   console.log('Viewer/resource evidence:',directory,'checks:',result.passed.length,'failures:',result.failed.length,'additional:',JSON.stringify(checks));app.exit(failed?1:0);
 }
